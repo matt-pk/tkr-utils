@@ -4,7 +4,7 @@ import random
 _MARKOV_DEPTH = 2
 _MIN_LEN = 4
 _MAX_LEN = 12
-_NAMES_TO_GENERATE = 20
+_NAMES_TO_GENERATE = 100
 _NICKNAME_CHANCE = 0.1
 # Chance nickname is form "Strong-Arms" rather than "The Strong"
 _NICKNAME_BODY_TYPE_CHANCE = 0.6
@@ -102,38 +102,38 @@ def generate_given_name():
                     name = ''
 
 
-load_data()
-for i in range(_NAMES_TO_GENERATE):
-    forename = generate_given_name()
-    forename = forename[0].upper() + forename[1:]
-    surname_type = random.choice(_SURNAME_CHANCES)
-    surname = ''
-    if surname_type == 'S':
-        surname = generate_given_name()
-        surname_suffix = random.choice(["bur", "sson", "dottir"])
-        if surname[-1] == surname_suffix[0]:
-            if surname[-2] == surname_suffix[0]:
-                surname_suffix = surname_suffix[2:]
-            else:
-                surname_suffix = surname_suffix[1:]
-        surname += surname_suffix
-        surname = surname[0].upper() + surname[1:]
-    elif surname_type == 'P':
-        surname = "of " + random.choice(_LOCS)
-    elif surname_type == 'G':
-        surname = random.choice(_GODS) + 'gard'
+def generate_name_list():
+    load_data()
+    name_list = []
+    for i in range(_NAMES_TO_GENERATE):
+        forename = generate_given_name()
+        forename = forename[0].upper() + forename[1:]
+        surname_type = random.choice(_SURNAME_CHANCES)
+        surname = ''
+        if surname_type == 'S':
+            surname = generate_given_name()
+            surname_suffix = random.choice(["bur", "sson", "dottir"])
+            if surname[-1] == surname_suffix[0]:
+                if surname[-2] == surname_suffix[0]:
+                    surname_suffix = surname_suffix[2:]
+                else:
+                    surname_suffix = surname_suffix[1:]
+            surname += surname_suffix
+            surname = " " + surname[0].upper() + surname[1:]
+        elif surname_type == 'P':
+            surname = " of " + random.choice(_LOCS)
+        elif surname_type == 'G':
+            surname = " " + random.choice(_GODS) + 'gard'
 
-    #nickname
-    if random.random() < _NICKNAME_CHANCE:
-        #body type
-        if random.random() < _NICKNAME_BODY_TYPE_CHANCE:
-            nickname = random.choice(_DESC) + "-" + random.choice(_BODY)
-            surname = "\"" + nickname + "\" " + surname
-        else:
-            nickname = "The " + random.choice(_DESC)
-            if surname:
-                surname += " \"" + nickname + "\""
+        #nickname
+        if random.random() < _NICKNAME_CHANCE:
+            #body type
+            if random.random() < _NICKNAME_BODY_TYPE_CHANCE:
+                nickname = random.choice(_DESC) + "-" + random.choice(_BODY)
             else:
-                surname = "\"" + nickname + "\""
+                nickname = "The " + random.choice(_DESC)
 
-    print(forename + " " + surname)
+            surname = " \"" + nickname + "\"" + surname
+
+        name_list.append(forename + surname)
+    return name_list

@@ -131,6 +131,9 @@ for i in range(_NAMES_TO_GENERATE):
             surname = "\"" + nickname + "\" " + surname
         else:
             nickname = "The " + random.choice(_DESC)
-            surname += " \"" + nickname + "\""
+            if surname:
+                surname += " \"" + nickname + "\""
+            else:
+                surname = "\"" + nickname + "\""
 
     print(forename + " " + surname)
